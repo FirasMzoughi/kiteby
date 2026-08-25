@@ -1,15 +1,39 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Paste your Supabase project credentials here.
-/// Find them in your Supabase dashboard under Project Settings > API.
+/// Supabase credentials, loaded from the gitignored `.env` file at startup.
+///
+/// See `.env.example` for the expected keys. `SUPABASE_KEY` must be the
+/// publishable key (`sb_publishable_...`) or the legacy anon key -- never the
+/// service_role key, which bypasses Row Level Security.
 class SupabaseConfig {
-  static const String url = 'https://YOUR_PROJECT_REF.supabase.co';
-  static const String anonKey = 'YOUR_SUPABASE_ANON_KEY';
+  static String get url {
+    final value = dotenv.env['SUPABASE_URL'];
+    if (value == null || value.isEmpty) {
+      throw StateError(
+        'SUPABASE_URL is missing. Copy .env.example to .env and fill it in.',
+      );
+    }
+    return value;
+  }
+
+  static String get publishableKey {
+    final value = dotenv.env['SUPABASE_KEY'];
+    if (value == null || value.isEmpty) {
+      throw StateError(
+        'SUPABASE_KEY is missing. Copy .env.example to .env and fill it in.',
+      );
+    }
+    return value;
+  }
 
   static Future<void> initialize() async {
+    await dotenv.load(fileName: '.env');
     await Supabase.initialize(
       url: url,
-      anonKey: anonKey,
+      // `sb_publishable_...` keys use publishableKey; the older `eyJ...` anon
+      // keys are accepted here too.
+      publishableKey: publishableKey,
     );
   }
 }
