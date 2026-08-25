@@ -11,9 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.1.0
-  provider: ^6.1.5 
+  provider: ^6.1.5
   cupertino_icons: ^1.0.8
   get: ^4.7.2
+  supabase_flutter: ^2.8.0
 
 dev_dependencies:
   flutter_test:
@@ -23,4 +24,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/icons/logo.svg  # Declare the SVG logo asset
+    - assets/icons/  # Declare the SVG logo asset

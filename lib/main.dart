@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kiteby/core/supabase_config.dart';
 import 'package:kiteby/screens/views/splash/onboarding_screen.dart';
 import 'package:kiteby/screens/views/splash/splash-secreen.dart';
+import 'package:kiteby/screens/views/welcome/welcome-secreen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SupabaseConfig.initialize();
   runApp(const KitebyApp());
 }
 
@@ -25,6 +29,7 @@ class KitebyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
+        '/welcome': (context) => const WelcomeScreen(),
       },
     );
   }

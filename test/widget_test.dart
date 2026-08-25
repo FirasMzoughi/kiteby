@@ -1,30 +1,45 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:kiteby/main.dart';
+import 'package:kiteby/screens/views/splash/onboarding_screen.dart';
+import 'package:kiteby/screens/views/welcome/welcome-secreen.dart';
+
+// NOTE: KitebyApp itself is not tested here because its first route is the
+// splash screen, which reads Supabase auth state and schedules a navigation
+// timer. Testing it would require initializing Supabase against a live
+// project. These tests cover the screens that are pure UI.
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Onboarding shows the first page and can advance', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: OnboardingScreen()));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Read Books'), findsOneWidget);
+    expect(find.text('Skip Intro'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.tap(find.byIcon(Icons.arrow_forward));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Review Them'), findsOneWidget);
+  });
+
+  testWidgets('Onboarding language menu opens', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: OnboardingScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('English'), findsNothing);
+
+    await tester.tap(find.byIcon(Icons.language));
+    await tester.pumpAndSettle();
+
+    expect(find.text('English'), findsOneWidget);
+    expect(find.text('Français'), findsOneWidget);
+  });
+
+  testWidgets('Welcome screen renders its call to action', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: WelcomeScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Get Started Now'), findsOneWidget);
   });
 }

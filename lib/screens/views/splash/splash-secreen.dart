@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kiteby/core/auth_service.dart';
+import 'package:kiteby/screens/views/home/home_screen.dart';
 import 'package:kiteby/screens/views/splash/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -38,24 +40,27 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // Start animations
     _controller.forward();
 
-    // Navigate to onboarding after 1.5 seconds
+    // A returning user with a restored session skips the intro entirely.
     Future.delayed(const Duration(milliseconds: 1800), () {
-  if (mounted) {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 800), // المدة
-        pageBuilder: (context, animation, secondaryAnimation) => const OnboardingScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-      ),
-    );
-  }
-});
+      if (!mounted) return;
 
+      final Widget next = AuthService.instance.isLoggedIn
+          ? const HomeScreen()
+          : const OnboardingScreen();
+
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 800),
+          pageBuilder: (context, animation, secondaryAnimation) => next,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
+    });
   }
 
   @override
