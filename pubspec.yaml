@@ -21,6 +21,26 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.1
+
+# App launcher icon. Regenerate after changing the source images with:
+#   flutter pub run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/icons/app_icon.png"
+  android: "launcher_icon"
+  # Adaptive icon: Android masks the foreground to a circle/squircle, so the
+  # logo is inset to 62% in app_icon_foreground.png to avoid clipping.
+  adaptive_icon_background: "#72C6EB"
+  adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    background_color: "#FFFFFF"
+    theme_color: "#72C6EB"
+  windows:
+    generate: true
+    icon_size: 256
 
 flutter:
   uses-material-design: true
